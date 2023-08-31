@@ -8,9 +8,7 @@ from tkinter.scrolledtext import ScrolledText
 
 def round_up(x, place=2):
     context = decimal.getcontext()
-    # get the original setting so we can put it back when we're done
     original_rounding = context.rounding
-    # change context to act like ceil()
     context.rounding = decimal.ROUND_CEILING
 
     rounded = round(decimal.Decimal(str(x)), place)
@@ -25,7 +23,7 @@ tempoRestante = tempoSalario-salariosRecebidos
 
 taxaBanco = 50
 
-gastosMensais = 60
+gastosMensais = 100
 
 salarioReal = salarioBruto - taxaBanco - gastosMensais
 
@@ -39,7 +37,7 @@ importacao = True
 imposto1 = 0
 imposto2 = 0
 
-taxaImportacao = 0.60
+taxaImportacao = 0
 
 if importacao == True:
     imposto1 = precoAlvo * taxaImportacao
@@ -50,6 +48,12 @@ precoReal2 = precoAlvo2 + imposto1
 
 guardar1 = precoReal / math.ceil(precoReal/salarioReal)
 guardar2 = precoReal2 / math.ceil(precoReal2/salarioReal)
+
+totalSalario = salarioReal * tempoSalario
+
+percentualGasto1 = precoReal / totalSalario
+percentualGasto2 = precoReal2 / totalSalario 
+
 app = tk.Tk()
 app.title("Teste Interface VR")
 
@@ -57,7 +61,7 @@ label128 = ttk.Label(app, text='Versão de 128GB').grid(row=0, column=1)
 
 label256 = ttk.Label(app, text='Versão de 256GB').grid(row=0, column=4)
 
-vr128 = ScrolledText(app, width=54, height=26)
+vr128 = ScrolledText(app, width=54, height=28)
 vr128.insert(tk.INSERT, f'''Salário mensal bruto: {salarioBruto}   
 Salário total bruto: {salarioBruto * tempoSalario}  
 Taxa do banco: {taxaBanco}   
@@ -82,14 +86,17 @@ Quanto pode gastar por mês bruto: {round_up(salarioBruto - guardar1)}
 Quanto pode gastar por mês líquido: {round_up(salarioReal - guardar1)}
 
 Dinheiro gasto na compra: {round_up(precoReal)}
+Percentual do salário gasto: {round_up(percentualGasto1*100)}%
 Dinheiro total após a compra: {round_up(tempoRestante * salarioReal - precoReal)} 
+Percentual do salário restante: {round_up(100-percentualGasto1*100)}%
+
 ''')
 vr128.grid(row=3, column=1)
 
 separator = ttk.Separator(app, orient="vertical")
 separator.grid(row=2, column=4)
 
-vr256 = ScrolledText(app, width=54, height=26)
+vr256 = ScrolledText(app, width=54, height=28)
 vr256.insert(tk.INSERT, f'''Salário mensal bruto: {salarioBruto}   
 Salário total bruto: {salarioBruto * tempoSalario}  
 Taxa do banco: {taxaBanco}   
@@ -114,8 +121,12 @@ Quanto pode gastar por mês bruto: {round_up(salarioBruto - guardar2)}
 Quanto pode gastar por mês líquido: {round_up(salarioReal - guardar2)}
 
 Dinheiro gasto na compra: {round_up(precoReal2)}
-Dinheiro total após a compra: {round_up(tempoRestante * salarioReal - precoReal2)} 
+Percentual do salário gasto: {round_up(percentualGasto2*100)}%
+Dinheiro total após a compra: {round_up(tempoRestante * salarioReal - precoReal2)}
+Percentual do salário restante: {round_up(100-percentualGasto2*100)}%
 ''')
 vr256.grid(row=3, column=4)
+
+app.eval('tk::PlaceWindow . center')
 
 app.mainloop()
