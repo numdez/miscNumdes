@@ -23,7 +23,7 @@ tempoRestante = tempoSalario-salariosRecebidos
 
 taxaBanco = 50
 
-gastosMensais = 100
+gastosMensais = 0
 
 salarioReal = salarioBruto - taxaBanco - gastosMensais
 
