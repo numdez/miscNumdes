@@ -37,7 +37,7 @@ importacao = True
 imposto1 = 0
 imposto2 = 0
 
-taxaImportacao = 0
+taxaImportacao = 0.6
 
 if importacao == True:
     imposto1 = precoAlvo * taxaImportacao
