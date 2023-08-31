@@ -44,7 +44,7 @@ if importacao == True:
     imposto2 = precoAlvo2 * taxaImportacao
 
 precoReal = precoAlvo + imposto1
-precoReal2 = precoAlvo2 + imposto1
+precoReal2 = precoAlvo2 + imposto2
 
 guardar1 = precoReal / math.ceil(precoReal/salarioReal)
 guardar2 = precoReal2 / math.ceil(precoReal2/salarioReal)
