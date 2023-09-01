@@ -24,11 +24,13 @@ tempoRestante = tempoSalario-salariosRecebidos
 taxaBanco = 50
 
 gastosMensais = 0
+descontos = 53.17
+descontos2 = 10.41 + 53.17 + 11.49
 
 salarioReal = salarioBruto - taxaBanco - gastosMensais
 
-precoAlvo = 1908.54
-precoAlvo2 = 2168.82
+precoAlvo = 1832.70 + 62.90
+precoAlvo2 = 1947.89 + 91.41 + 62.90
 
 importacao = True
 
@@ -37,14 +39,14 @@ importacao = True
 imposto1 = 0
 imposto2 = 0
 
-taxaImportacao = 0.6
+taxaImportacao = 0
 
 if importacao == True:
     imposto1 = precoAlvo * taxaImportacao
     imposto2 = precoAlvo2 * taxaImportacao
 
-precoReal = precoAlvo + imposto1
-precoReal2 = precoAlvo2 + imposto2
+precoReal = precoAlvo + imposto1 - descontos
+precoReal2 = precoAlvo2 + imposto2 - descontos2
 
 guardar1 = precoReal / math.ceil(precoReal/salarioReal)
 guardar2 = precoReal2 / math.ceil(precoReal2/salarioReal)
@@ -57,9 +59,9 @@ percentualGasto2 = precoReal2 / totalSalario
 app = tk.Tk()
 app.title("Teste Interface VR")
 
-label128 = ttk.Label(app, text='Versão de 128GB').grid(row=0, column=1)
+label128 = ttk.Label(app, text='MEK Foto Store').grid(row=0, column=1)
 
-label256 = ttk.Label(app, text='Versão de 256GB').grid(row=0, column=4)
+label256 = ttk.Label(app, text='All In One Store').grid(row=0, column=4)
 
 vr128 = ScrolledText(app, width=54, height=28)
 vr128.insert(tk.INSERT, f'''Salário mensal bruto: {salarioBruto}   
