@@ -152,3 +152,6 @@ element.click()
 
 
 # %%
+# CT_009
+driver.get("https://phptravels.com/demo")
+#copiar o outro caso mas errar a soma ou algum campo assim
