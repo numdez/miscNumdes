@@ -1,10 +1,13 @@
 # %%
 # Imports
 import time
+import random
 import pyautogui as pyag
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 from selenium.webdriver.common.by import By
 def _waitForAlert(driver):
     return WebDriverWait(driver, 5).until(EC.alert_is_present())
@@ -25,7 +28,6 @@ pega = driver.find_element
 driver.get("https://www.phptravels.com")
 element = pega(By.XPATH, '//*[@id="swup"]/div[1]/div/div[1]/div/div[1]/div/div[1]/a')
 element.click()
-time.sleep(15)
 
 # %%
 # CT_002 Preenche demo
@@ -44,7 +46,6 @@ element = pega(By.ID, 'number')
 element.send_keys(int(numero1.text)+int(numero2.text))
 element = pega(By.ID, 'demo')
 element.click()
-time.sleep(5)
 
 
 # %%
@@ -139,7 +140,7 @@ driver.switch_to.window(driver.window_handles[1])
 
 
 # %%
-# CT_008
+# CT_008 Seleciona pacote de compra
 driver.get("https://phptravels.com")
 element = pega(By.XPATH, '/html/body/header/nav/div/button')
 element.click()
@@ -152,6 +153,145 @@ element.click()
 
 
 # %%
-# CT_009
+# CT_009 Verifica obrigatoriedade de acurácia
 driver.get("https://phptravels.com/demo")
+element = pega(By.XPATH, '//*[@id="swup"]/section[1]/div/div/div[1]/div/div/div/div/div/div/div/div[1]/div[1]/div[1]/div/input')
+element.send_keys("Josefino")
+element = pega(By.XPATH, '//*[@id="swup"]/section[1]/div/div/div[1]/div/div/div/div/div/div/div/div[1]/div[1]/div[2]/div/input')
+element.send_keys('Almeida')
+element = pega(By.XPATH, '//*[@id="swup"]/section[1]/div/div/div[1]/div/div/div/div/div/div/div/div[1]/div[2]/input')
+element.send_keys('JF Inc.')
+element = pega(By.XPATH, '//*[@id="swup"]/section[1]/div/div/div[1]/div/div/div/div/div/div/div/div[1]/div[3]/input')
+element.send_keys('josefinoBusiness@gmail.com')
+numero1 = pega(By.ID, 'numb1')
+numero2 = pega(By.ID, 'numb2')
+element = pega(By.ID, 'number')
+element.send_keys(int(numero1.text)*int(numero2.text))
+element = pega(By.ID, 'demo')
+element.click()
+try:
+    alert = _waitForAlert(driver)
+    popup = alert.text
+    print(popup)
+    alert.accept()
+except: 
+    pass
 #copiar o outro caso mas errar a soma ou algum campo assim
+# %%
+# CT_010 Testa troca de temas
+driver.get("https://www.phptravels.com/themes")
+element = pega(By.XPATH, '//*[@id="swup"]/div[2]/div/div[2]/div/div[1]/h2/a[1]')
+element.click()
+time.sleep(2)
+
+driver.switch_to.window(driver.window_handles[1])
+time.sleep(2)
+driver.switch_to.window(driver.window_handles[0])
+time.sleep(2)
+html = driver.find_element(By.TAG_NAME, 'html')
+html.send_keys(Keys.PAGE_DOWN)
+element = pega(By.XPATH, '//*[@id="swup"]/div[2]/div/div[4]/div/div[1]/h2/a[1]')
+time.sleep(1)
+print(element.text)
+element.click()
+time.sleep(2)
+driver.switch_to.window(driver.window_handles[2])
+
+# %%
+# CT_011 Teste de tema "não automatizável"
+driver.get("https://www.phptravels.com")
+element = pega(By.XPATH, '/html/body/header/nav/div/button')
+element.click()
+time.sleep(1)
+element = pega(By.XPATH, '//*[@id="mynavbar"]/ul/li[3]/a')
+element.click()
+time.sleep(2)
+element = pega(By.XPATH, '//*[@id="swup"]/div[2]/div/div[2]/div/div[1]/h2/a[1]')
+element.click()
+time.sleep(2)
+driver.switch_to.window(driver.window_handles[1])
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+# %%
+# CT_012 Verificar funcionamento da aba "Sucess Stories"
+driver.get("https://www.phptravels.com")
+element = pega(By.XPATH, '//*[@id="swup"]/strong/div[7]/div/div[1]/div')
+driver.execute_script("arguments[0].scrollIntoView();", element)
+decisao = random.randint(1,2)
+if decisao == 1:
+    element = pega(By.XPATH, '//*[@id="swup"]/strong/div[7]/div/div[4]/span[2]')
+    element.click()
+    time.sleep(0.5)
+    element = pega(By.ID, 'client2')
+    element.click()
+    time.sleep(5)
+if decisao == 2:
+    element = pega(By.XPATH, '//*[@id="swup"]/strong/div[7]/div/div[4]/span[1]')
+    element.click()
+    time.sleep(0.5)
+    element = pega(By.ID, 'client3')
+    element.click()
+    time.sleep(5)
+
+element = pega(By.XPATH, '//*[@id="swup"]/strong/div[7]/div/div[2]/div/div[2]/div/div[2]/a[2]')
+element.click()
+driver.switch_to.window(driver.window_handles[1])
+
+# %%
+# CT_013 Não pode ser automatizado
+
+# %%
+# CT_014 Teste WhatsApp
+driver.get("https://www.phptravels.com")
+element = pega(By.XPATH, '/html/body/strong/a/div')
+element.click()
+driver.switch_to.window(driver.window_handles[1])
+
+# %%
+# CT_015 Teste chat não pode ser automatizado devidamente
+driver.get("https://www.phptravels.com")
+element = pega(By.XPATH, '//*[@id="button-body"]')
+element.click()
+time.sleep(1)
+element = pega(By.XPATH, '//*[@id="new-message-textarea"]')
+element.send_keys('Teste 123')
+time.sleep(1)
+element = pega(By.XPATH, '/html/body/div/div/div/div[1]/div[1]/div[1]/form/div[2]/div[1]/input')
+element.send_keys('josefinoBusiness@gmail.com')
+element = pega(By.XPATH, '/html/body/div/div/div/div[1]/div[1]/div[1]/form/div[2]/div[2]/input')
+element.send_keys('+5598932323232')
+element = pega(By.XPATH, '/html/body/div/div/div/div[1]/div[1]/div[1]/form/button')
+element.click()
+
+# %%
+# CT_016 Teste About us
+driver.get("https://phptravels.com/about-us/")
+element = pega(By.XPATH, '//*[@id="swup"]/div[1]/div/div')
+print(element.text)
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+time.sleep(1)
+
+
+# %%
+# CT_017 Teste Email ocorre fora do site
+driver.get("https://phptravels.com")
+element = pega(By.XPATH, '//*[@id="swup"]/strong/div[4]/div[2]/div/div[2]/div/div[1]/a')
+element.click()
+
+
+
+# %%
+# CT_019 Verificar Blog
+driver.get("https://phptravels.com")
+element = pega(By.XPATH, '/html/body/header/nav/div/button')
+element.click()
+time.sleep(2)
+element = pega(By.XPATH, '//*[@id="mynavbar"]/ul/li[6]/a')
+element.click()
+time.sleep(1)
+element = pega(By.XPATH, '//*[@id="mynavbar"]/ul/li[6]/ul/li[3]/a')
+element.click()
+driver.switch_to.window(driver.window_handles[1])
+
+# %%
+# CT_020 não pode ser automatizado pois ocorre fora do site
