@@ -278,6 +278,37 @@ driver.get("https://phptravels.com")
 element = pega(By.XPATH, '//*[@id="swup"]/strong/div[4]/div[2]/div/div[2]/div/div[1]/a')
 element.click()
 
+# %%
+# CT_018 Teste de formas de pagamento
+driver.get("https://www.phptravels.com/pricing")
+element = pega(By.XPATH, '//*[@id="firstname"]')
+element.send_keys('Josefino')
+element = pega(By.XPATH, '//*[@id="lastname"]')
+element.send_keys('Almeida')
+element = pega(By.XPATH, '//*[@id="email"]')
+element.send_keys('josefinoBusiness@gmail.com')
+element = pega(By.XPATH, '//*[@id="address"]')
+element.send_keys('')
+'''
+pegar: 
+    //*[@id="streetnumber"]
+    //*[@id="city"]
+    //*[@id="zip"]
+    //*[@id="select2-drop"] ou //*[@id="select2-chosen-211"]
+enviar: 
+    Maranhão
+    Enter
+pegar:
+    //*[@id="fiscal-personal"]
+    //*[@id="phone"]
+    //*[@id="select2-chosen-94"]
+    //*[@id="cardnum"]
+    //*[@id="select2-chosen-216"]
+    //*[@id="s2id_ed_year"]/a
+    //*[@id="secnum"]
+    //*[@id="checkout-step-1"]/div/div[3]/div/div[2]/div[3]/button[1]
+
+'''
 
 
 # %%
