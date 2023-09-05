@@ -290,7 +290,7 @@ element = pega(By.XPATH, '//*[@id="swup"]/strong/div[4]/div[2]/div/div[2]/div/di
 element.click()
 
 # %%
-# CT_018 Teste de formas de pagamento
+# CT_018 Acurácia pagamento
 driver.get("https://www.phptravels.com/pricing")
 element = pega(By.XPATH, '//*[@id="swup"]/div[2]/div/div/div[2]/div/div[2]')
 element.click()
@@ -357,7 +357,7 @@ element.click()
 driver.switch_to.window(driver.window_handles[1])
 
 # %%
-# CT_020 não pode ser automatizado pois ocorre fora do site
+# CT_020 Carregamento Time
 driver.get("https://phptravels.com")
 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 element = pega(By.XPATH, '/html/body/footer/div/div/div[5]/a[5]')
