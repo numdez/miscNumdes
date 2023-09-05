@@ -2,6 +2,7 @@
 # Imports
 import time
 import random
+import jupyter
 import pyautogui as pyag
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -16,12 +17,6 @@ def _waitForAlert(driver):
 # Inicia driver
 driver = webdriver.Edge()
 pega = driver.find_element
-
-
-'''
-
-
-'''
 
 # %%
 # CT_001 Acessa demo
@@ -47,10 +42,8 @@ element.send_keys(int(numero1.text)+int(numero2.text))
 element = pega(By.ID, 'demo')
 element.click()
 
-
 # %%
 # CT_003 Não pode ser automatizado pois é fora do site
-
 
 # %%
 # CT_004 Não pode ser automatizado devido à captcha
@@ -117,12 +110,11 @@ start = time.time()
 driver.get("https://phptravels.com/")
 end = time.time()
 print(f' Demorou {end-start} ')
-time.sleep(5)
+time.sleep(10)
 start = time.time()
 driver.get("https://phptravels.com/")
 end = time.time()
 print(f' Demorou {end-start} ')
-
 
 # %%
 # CT_007 Troca de tema
@@ -138,7 +130,6 @@ element.click()
 time.sleep(2)
 driver.switch_to.window(driver.window_handles[1])
 
-
 # %%
 # CT_008 Seleciona pacote de compra
 driver.get("https://phptravels.com")
@@ -150,7 +141,6 @@ element.click()
 time.sleep(2)
 element = pega(By.XPATH, '//*[@id="swup"]/div[2]/div/div/div[1]/div/div[2]/a')
 element.click()
-
 
 # %%
 # CT_009 Verifica obrigatoriedade de acurácia
@@ -176,7 +166,7 @@ try:
     alert.accept()
 except: 
     pass
-#copiar o outro caso mas errar a soma ou algum campo assim
+
 # %%
 # CT_010 Testa troca de temas
 driver.get("https://www.phptravels.com/themes")
@@ -238,7 +228,7 @@ element.click()
 driver.switch_to.window(driver.window_handles[1])
 
 # %%
-# CT_013 Não pode ser automatizado
+# CT_013 Redirecionamento
 
 # %%
 # CT_014 Teste WhatsApp
@@ -281,6 +271,10 @@ element.click()
 # %%
 # CT_018 Teste de formas de pagamento
 driver.get("https://www.phptravels.com/pricing")
+element = pega(By.XPATH, '//*[@id="swup"]/div[2]/div/div/div[2]/div/div[2]')
+element.click()
+driver.switch_to.window(driver.window_handles[1])
+time.sleep(1)
 element = pega(By.XPATH, '//*[@id="firstname"]')
 element.send_keys('Josefino')
 element = pega(By.XPATH, '//*[@id="lastname"]')
@@ -288,28 +282,45 @@ element.send_keys('Almeida')
 element = pega(By.XPATH, '//*[@id="email"]')
 element.send_keys('josefinoBusiness@gmail.com')
 element = pega(By.XPATH, '//*[@id="address"]')
-element.send_keys('')
-'''
-pegar: 
-    //*[@id="streetnumber"]
-    //*[@id="city"]
-    //*[@id="zip"]
-    //*[@id="select2-drop"] ou //*[@id="select2-chosen-211"]
-enviar: 
-    Maranhão
-    Enter
-pegar:
-    //*[@id="fiscal-personal"]
-    //*[@id="phone"]
-    //*[@id="select2-chosen-94"]
-    //*[@id="cardnum"]
-    //*[@id="select2-chosen-216"]
-    //*[@id="s2id_ed_year"]/a
-    //*[@id="secnum"]
-    //*[@id="checkout-step-1"]/div/div[3]/div/div[2]/div[3]/button[1]
+element.send_keys('4ª Travessa Tomé de Sousa')
 
-'''
+element = pega(By.XPATH, '//*[@id="streetnumber"]')
+element.send_keys('625')
+element = pega(By.XPATH, '//*[@id="city"]')
+element.send_keys('Sao Luis')
+element = pega(By.XPATH, '//*[@id="zip"]')
+element.send_keys('65037052')
+element = pega(By.XPATH, '//*[@id="select2-drop"] ou //*[@id="select2-chosen-211"]')
+element.send_keys('Maranhão')
+element.send_keys(Keys.RETURN)
 
+element = pega(By.XPATH, '//*[@id="fiscal-personal"]')
+element.send_keys('71842399381')
+element = pega(By.XPATH, '//*[@id="phone"]')
+element.send_keys('+5598932222222')
+
+element = pega(By.XPATH, '//*[@id="cardnum"]')
+element.send_keys('5478749580721789')
+element = pega(By.ID, 's2id_ed_month')
+element.click()
+for i in range(4):
+    element.send_keys(Keys.DOWN)
+element.send_keys(Keys.RETURN)
+element = pega(By.ID, 's2id_ed_year')
+element.click()
+for i in range(8):
+    element.send_keys(Keys.DOWN)
+element.send_keys(Keys.RETURN)
+element = pega(By.ID, 'secnum')
+element.send_keys('305')
+element = pega(By.XPATH, '//*[@id="checkout-step-1"]/div/div[3]/div/div[2]/div[3]/button[1]')
+element.click()
+time.sleep(10)
+try:
+    element = pega(By.XPATH, '//*[@id="checkout-step-1"]/div/div[4]')
+    print(element.text)
+except:
+    print('Site demorou demais para responder')
 
 # %%
 # CT_019 Verificar Blog
