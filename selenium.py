@@ -98,8 +98,13 @@ driver.get("https://www.phptravels.com")
 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 element = pega(By.ID, 'address')
 element.send_keys('josefinoBusiness@gmail.com')
+element = pega(By.XPATH, '//*[@id="subBtn"]')
+element.click()
+time.sleep(3)
 try:
     alert = _waitForAlert(driver)
+    popup = alert.text
+    print(popup)
     alert.accept()
 except: 
     pass
@@ -159,6 +164,7 @@ element = pega(By.ID, 'number')
 element.send_keys(int(numero1.text)*int(numero2.text))
 element = pega(By.ID, 'demo')
 element.click()
+time.sleep(2)
 try:
     alert = _waitForAlert(driver)
     popup = alert.text
@@ -228,7 +234,22 @@ element.click()
 driver.switch_to.window(driver.window_handles[1])
 
 # %%
-# CT_013 Redirecionamento
+# CT_013 Acurácia do newsletter
+driver.get("https://www.phptravels.com")
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+element = pega(By.ID, 'address')
+element.send_keys('josefinoBusinessjosefAcordos.com')
+element = pega(By.XPATH, '//*[@id="subBtn"]')
+element.click()
+time.sleep(2)
+try:
+    alert = _waitForAlert(driver)
+    popup = alert.text
+    print(popup)
+    alert.accept()
+except: 
+    pass
+
 
 # %%
 # CT_014 Teste WhatsApp
@@ -337,3 +358,10 @@ driver.switch_to.window(driver.window_handles[1])
 
 # %%
 # CT_020 não pode ser automatizado pois ocorre fora do site
+driver.get("https://phptravels.com")
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+element = pega(By.XPATH, '/html/body/footer/div/div/div[5]/a[5]')
+start = time.time()
+element.click()
+end = time.time()
+print(f' Demorou {end-start} ')
