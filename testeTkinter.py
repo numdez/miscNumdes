@@ -1,10 +1,32 @@
 import math
+import locale
 import decimal
+import requests
 import tkinter as tk
+
 
 from tkinter import ttk
 from tkinter.scrolledtext import ScrolledText
 
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+
+url = 'https://api.exchangerate-api.com/v4/latest/USD'
+
+
+
+class RealTimeCurrencyConverter():
+    def __init__(self,url):
+            self.data = requests.get(url).json()
+            self.currencies = self.data['rates']
+
+    def convert(self, from_currency, to_currency, amount): 
+        initial_amount = amount 
+        if from_currency != 'USD' : 
+            amount = round(float(amount) / self.currencies[from_currency], 4) 
+  
+        # limiting the precision to 4 decimal places 
+        amount = round(float(amount) * self.currencies[to_currency], 4) 
+        return amount
 
 def round_up(x, place=2):
     context = decimal.getcontext()
@@ -15,6 +37,18 @@ def round_up(x, place=2):
     context.rounding = original_rounding
     return float(rounded)
 
+converter = RealTimeCurrencyConverter(url)
+
+cur_from = 'USD'
+cur_dest = 'BRL'
+amount = 70
+mensagem = ''
+convertido = converter.convert(cur_from.upper(), cur_dest.upper(), amount)
+if cur_dest.upper() == "BRL":
+    mensagem = locale.currency(float(convertido), grouping = True) + ' ' + str(cur_dest.lower())
+if cur_dest.upper() != "BRL":
+    mensagem = str("${:,.2f}".format(float(convertido)) + ' ' + str(cur_dest.lower()))
+
 salarioBruto = 811.4
 
 tempoSalario = 12
@@ -24,13 +58,11 @@ tempoRestante = tempoSalario-salariosRecebidos
 taxaBanco = 50
 
 gastosMensais = 0
-descontos = 53.17
-descontos2 = 10.41 + 53.17 + 11.49
 
 salarioReal = salarioBruto - taxaBanco - gastosMensais
 
-precoAlvo = 1832.70 + 62.90
-precoAlvo2 = 1947.89 + 91.41 + 62.90
+precoAlvo = 1792.59
+precoAlvo2 = 2499.00
 
 importacao = True
 
@@ -45,9 +77,8 @@ if importacao == True:
     imposto1 = precoAlvo * taxaImportacao
     imposto2 = precoAlvo2 * taxaImportacao
 
-precoReal = precoAlvo + imposto1 - descontos
-precoReal2 = precoAlvo2 + imposto2 - descontos2
-
+precoReal = precoAlvo + float(convertido)
+precoReal2 = precoAlvo2 + imposto2
 guardar1 = precoReal / math.ceil(precoReal/salarioReal)
 guardar2 = precoReal2 / math.ceil(precoReal2/salarioReal)
 
@@ -57,11 +88,11 @@ percentualGasto1 = precoReal / totalSalario
 percentualGasto2 = precoReal2 / totalSalario 
 
 app = tk.Tk()
-app.title("Teste Interface VR")
+app.title("Comparação preços VR")
 
-label128 = ttk.Label(app, text='MEK Foto Store').grid(row=0, column=1)
+label128 = ttk.Label(app, text='Pico 4').grid(row=0, column=1)
 
-label256 = ttk.Label(app, text='All In One Store').grid(row=0, column=4)
+label256 = ttk.Label(app, text='Quest 2').grid(row=0, column=4)
 
 vr128 = ScrolledText(app, width=54, height=28)
 vr128.insert(tk.INSERT, f'''Salário mensal bruto: {salarioBruto}   
