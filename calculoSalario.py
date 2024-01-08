@@ -1,33 +1,50 @@
 import math
+import decimal
+
+def round_up(x, place=2):
+    context = decimal.getcontext()
+    # get the original setting so we can put it back when we're done
+    original_rounding = context.rounding
+    # change context to act like ceil()
+    context.rounding = decimal.ROUND_CEILING
+
+    rounded = round(decimal.Decimal(str(x)), place)
+    context.rounding = original_rounding
+    return float(rounded)
 
 salarioBruto = 811.4
 
 tempoSalario = 12
-salariosRecebidos = 1
+salariosRecebidos = 5
 tempoRestante = tempoSalario-salariosRecebidos
 
 taxaBanco = 50
 
 salarioReal = salarioBruto - taxaBanco
 
-precoAlvo = 1908.54
-precoAlvo2 = 2168.82
+motherboard = 549
+gabinete = 357
+cpu = 699
+fonte = 265
+ram = 370
+gpu = 952.45
 
-importacao = True
+componentes = [motherboard, gabinete, cpu, fonte, ram, gpu]
+comprados = [gpu]
+faltaComprar = [componente for componente in componentes if componente not in comprados]
+
+totalRestante = 0 
+totalCompleto = motherboard + gabinete + cpu + fonte + ram + gpu
+for i in faltaComprar:
+    totalRestante += i
 
 #54 caracteres na maior linha
 
 imposto1 = 0
 imposto2 = 0
 
-taxaImportacao = 0.6
-
-if importacao == True:
-    imposto1 = precoAlvo * taxaImportacao
-    imposto2 = precoAlvo2 * taxaImportacao
-
-precoReal = precoAlvo + imposto1
-precoReal2 = precoAlvo2 + imposto1
+precoReal = totalCompleto
+precoReal2 = totalRestante
 
 guardar1 = precoReal / math.ceil(precoReal/salarioReal)
 guardar2 = precoReal2 / math.ceil(precoReal2/salarioReal)
@@ -45,21 +62,16 @@ Salário total bruto restante: {tempoRestante * salarioBruto}                   
 Taxa do banco total restante: {tempoRestante * taxaBanco}                      -- Taxa total do banco restante: {tempoRestante*taxaBanco}
 Salário total líquido restante: {tempoRestante * salarioReal}                 -- Salário total líquido restante: {tempoRestante*salarioReal}
 
-Preço no site: {precoAlvo}                                 -- Preço no site: {precoAlvo2}
-Meses para comprar: {math.ceil(precoAlvo/salarioReal)}                                  -- Meses para comprar: {math.ceil(precoAlvo2/salarioReal)}
-Imposto: {imposto1}                                      -- Imposto: {imposto2}
+Preço total: {totalCompleto}                                   -- Preço total: {totalRestante}
+Meses para comprar: {math.ceil(totalCompleto/salarioReal)}                                  -- Meses para comprar: {math.ceil(totalRestante/salarioReal)}
+Quanto economizar por mês: {round_up(guardar1)}                      -- Quanto economizar por mês: {round_up(guardar2)}
 
-Meses para pagar imposto (se for taxado): {math.ceil(imposto1/salarioReal)}            -- Meses para pagar imposto (se for taxado): {math.ceil(imposto2/salarioReal)}
-Preço com imposto: {precoReal}                  -- Preço com imposto: {precoReal2}
-Meses para pagar tudo: {math.ceil(precoReal/salarioReal)}                               -- Meses para pagar tudo: {math.ceil(precoReal2/salarioReal)}
-Quanto economizar por mês: {guardar1}                    -- Quanto economizar por mês: {guardar2}
+Quanto pode gastar por mês bruto: {round_up(salarioBruto - guardar1)}                -- Quanto pode gastar por mês bruto: {round_up(salarioBruto - guardar2)}
+Quanto pode gastar por mês líquido: {round_up(salarioReal - guardar1)}              -- Quanto pode gastar por mes líquido: {round_up(salarioReal - guardar2)}
 
-Quanto pode gastar por mês bruto: {salarioBruto - guardar1}   -- Quanto pode gastar por mês bruto: {salarioBruto - guardar2}
-Quanto pode gastar por mês líquido: {salarioReal - guardar1} -- Quanto pode gastar por mes líquido: {salarioReal - guardar2}
+Dinheiro total após a compra: {round_up(tempoRestante * salarioReal - precoReal)}                  -- Dinheiro total após a compra: {round_up(tempoRestante * salarioReal - precoReal2)}
 
-Dinheiro total após a compra: {tempoRestante * salarioReal - precoReal}                 -- Dinheiro total após a compra: {tempoRestante * salarioReal - precoReal2}
-
-************************128G************************** -- ************************256G**************************
+*************************Com GPU********************** -- *************************Sem GPU*************************
 '''
-
 print(calculos)
+input()
