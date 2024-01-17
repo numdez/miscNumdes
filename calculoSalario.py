@@ -13,6 +13,7 @@ def round_up(x, place=2):
     original_rounding = context.rounding
     # change context to act like ceil()
     context.rounding = decimal.ROUND_CEILING
+
     rounded = round(decimal.Decimal(str(x)), place)
     context.rounding = original_rounding
     return float(rounded)
@@ -82,7 +83,6 @@ gpu = 952.45
 componentes = [motherboard, gabinete, cpu, fonte, totalRam8, totalRam16, gpu]
 comprados = [gpu, cpu, gabinete]
 faltaComprar = [componente for componente in componentes if componente not in comprados]
-
 
 totalRestante = 0 
 totalCompleto = motherboard + gabinete + cpu + fonte + totalRam8 + totalRam16 + gpu
@@ -216,4 +216,5 @@ Peças faltando = {list(pcDict.items())}
         taxaCancelada = int(val)
     except:
         pass
+
 # %%
