@@ -36,6 +36,8 @@ def pagaChequeComCheque(usoCheque, chequeEspecial):
 
 clear()
 
+meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+
 salarioBruto = 811.4
 chequeEspecial = 300
 
@@ -125,8 +127,8 @@ Quanto pode gastar por mês líquido: {round_up(salarioCerto - guardarCerto)}   
 
 *************************Tudo************************* -- ***********************Condomínio********************* -- *************************Nada*************************
 
-Mês atual = {contaCondo2} + {contaSky2}
-Total mês atual = {contaCondo2 + contaSky2}
+Janeiro = {contaCondo} + {contaSky}
+Total janeiro = {contaCondo + contaSky}
 Resto = {surplus}
 '''
 print(calculos)
@@ -137,13 +139,20 @@ pcDict = {
     "Placa mãe": 380
 }
 
-val = input()
+usoChequeProx = 0
+val = input('Dinheiro extra recebido: ')
 try:
     taxaCancelada = int(val)
 except:
     pass
 
+contMes = 0
+
 while(val != 'n'):
+
+    contMes += 1
+    if contMes == 13:
+        contMes = 1
 
     if taxaCancelada > 0:
         taxaBanco = 0
@@ -171,34 +180,53 @@ while(val != 'n'):
         else:
             compravel = "nada"
             comprar = 0
-    
+    if surplus < 0 and surplus > -300:
+        resto = f'Cheque especial usado = {abs(surplus)}\nResto = 0'
+    elif surplus < -300:
+        resto = f'Cheque especial usado = 300\nFaltando = {round_up(abs(surplus)-300)}'
+    else:
+        resto = f'Resto = {surplus}'
     livreCartao -=  comprar
 
-    if compravel == 'Tudo já foi comprado':
-        printar = f''' 
-Próximo mês = {faturaAtual} + {duasContasEx} + {usoCheque} + {taxaBanco} - {salarioBruto}
-Total próximo mês = {salarioBruto - (faturaAtual + duasContas + taxaBanco + usoCheque)}
-Resto = {surplus} + {round_up(livreCartao)} livre no cartão ao fim do mês
+    #fazer uma lista com o nome dos meses e usar um contador de loop para mudar o print baseado na iteração
+    
+    if not list(pcDict):
+        printar = f'''
+{meses[contMes]} = {faturaAtual} + {duasContasEx} + {usoCheque} + {taxaBanco} - {salarioBruto}
+Total {meses[contMes].lower()} = {round_up(salarioBruto - (faturaAtual + duasContas + taxaBanco + usoCheque))}
+{resto}
 Peças compráveis = {compravel}
+Livre no cartão = {round_up(livreCartao)}
 '''
     else:
-        printar = f''' 
-Próximo mês = {faturaAtual} + {duasContasEx} + {usoCheque} + {taxaBanco} - {salarioBruto}
-Total próximo mês = {salarioBruto - (faturaAtual + duasContas + taxaBanco + usoCheque)}
-Resto = {surplus} + {round_up(livreCartao)} livre no cartão ao fim do mês
+        printar = f'''
+{meses[contMes]} = {faturaAtual} + {duasContasEx} + {usoCheque} + {taxaBanco} - {salarioBruto}
+Total {meses[contMes].lower()} = {round_up(salarioBruto - (faturaAtual + duasContas + taxaBanco + usoCheque))}
+{resto}
 Peças compráveis = {compravel}
+Livre no cartão = {round_up(livreCartao)}
 Peças faltando = {list(pcDict.items())}
     '''
     print(printar)
     salarioBruto = 811.4
-    faturaAtual = proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, comprar)
+    faturaAtual = round_up(proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, comprar))
+
+
+    if surplus < 0:
+        usoCheque = abs(surplus)
+        surplus = 0
+
+    '''
     if usoCheque > 0 and faturaAtual + duasContas + taxaBanco + usoCheque > salarioBruto:
         usoCheque = pagaChequeComCheque(usoCheque, chequeEspecial)
     elif usoCheque > 0 and surplus >= usoCheque:
-        usoCheque -= salarioBruto
+        tempCheque = usoCheque
+        usoCheque -= surplus
+        surplus -= tempCheque
         if usoCheque <= 0:
             usoCheque = 0
-    
+    '''
+
     aParcela = 58.06
     aFaltam -= 1
     bParcela = 191.90
@@ -211,7 +239,7 @@ Peças faltando = {list(pcDict.items())}
         usoCheque = 0
         salarioBruto += surplus
     
-    val = input()
+    val = input('Dinheiro extra recebido: ')
     try:
         taxaCancelada = int(val)
     except:
