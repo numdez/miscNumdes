@@ -69,10 +69,11 @@ salarioReal = salarioBruto - taxaBanco
 salarioCondo = salarioReal - contaCondo
 salarioCerto = salarioReal - contaCondo - contaSky
 
-motherboard = 370
+motherboard = 350 + 24
 gabinete = 210
 cpu = 576
-fonte = 280
+fonte600w = 280 + 31
+fonte650w = 288 + 34
 ram8 = 99.52
 impostoRam8 = 20.38
 totalRam8 = round_up(ram8 + impostoRam8)
@@ -82,12 +83,12 @@ totalRam16 = round_up(ram16 + impostoRam16)
 ram = round_up(ram8 + impostoRam8 + ram16 + impostoRam16)
 gpu = 952.45
 
-componentes = [motherboard, gabinete, cpu, fonte, totalRam8, totalRam16, gpu]
+componentes = [motherboard, gabinete, cpu, fonte650w, totalRam8, totalRam16, gpu]
 comprados = [gpu, cpu, gabinete]
 faltaComprar = [componente for componente in componentes if componente not in comprados]
 
 totalRestante = 0 
-totalCompleto = motherboard + gabinete + cpu + fonte + totalRam8 + totalRam16 + gpu
+totalCompleto = motherboard + gabinete + cpu + fonte650w + totalRam8 + totalRam16 + gpu
 for i in faltaComprar:
     totalRestante += i
 
@@ -135,8 +136,8 @@ print(calculos)
 
 pcDict = {
     "Pente de 16GB": totalRam16,
-    "Fonte 600W": 280,
-    "Placa mãe": 380
+    "fonte 650W": fonte650w,
+    "Placa mãe": motherboard
 }
 
 usoChequeProx = 0
