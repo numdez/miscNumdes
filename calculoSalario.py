@@ -53,16 +53,6 @@ contaCondo = 300
 contaSky2 = 0
 contaCondo2 = 0
 
-maxCartao = 1100
-livreCartao = 31
-faturaAtual = 427.91
-usoCheque = 178.58
-aParcela = 58.06
-aFaltam = 1
-bParcela = 191.90
-bFaltam = 2
-cParcela = 22.15
-cFaltam = 9
 surplus = 0
 
 salarioReal = salarioBruto - taxaBanco
@@ -134,6 +124,8 @@ Resto = {surplus}
 '''
 print(calculos)
 
+
+
 pcDict = {
     "Pente de 16GB": totalRam16,
     "fonte 650W": fonte650w,
@@ -147,86 +139,119 @@ try:
 except:
     pass
 
+maxCartao = 1100
+livreCartao = 31
+faturaAtual = 427.91
+usoCheque = 178.58
+aParcela = 58.06
+aFaltam = 1
+bParcela = 191.90
+bFaltam = 2
+cParcela = 22.15
+cFaltam = 9
+
+
 contMes = 0
+compravel = []
+comprar = 0
+comprando = ''
 
 while(val != 'n'):
 
+    
+    entradas = surplus   
     contMes += 1
-    if contMes == 13:
-        contMes = 1
+    if contMes == 12:
+        contMes = 0
 
-    if taxaCancelada > 0:
+    if taxaCancelada > 0 and contMes > 1:
         taxaBanco = 0
-        salarioBruto += taxaCancelada
+        entradas += taxaCancelada
+        taxaCancelada = 0
+    elif taxaCancelada > 0:
+        entradas += taxaCancelada
         taxaCancelada = 0
     if usoCheque < 0:
         usoCheque = abs(usoCheque)
     
+    usoChequePassado = usoCheque
+
     duasContas = contaCondo + contaSky
     duasContasEx = f"{contaCondo} + {contaSky}"
     zeroContas = contaCondo2 + contaSky2
     zeroContasEx = f"{contaCondo2} + {contaSky2}"
+    
 
-    surplus = round_up(salarioBruto - (faturaAtual + duasContas + usoCheque + taxaBanco))
+    surplus = round_up(salarioBruto + entradas - (faturaAtual + duasContas + usoChequePassado + taxaBanco))
     livreCartao += faturaAtual
+
     if not list(pcDict):
         comprar = 0
         compravel = 'Tudo já foi comprado'
+
+    cont = 0
     for k in list(pcDict):
-        if pcDict[k] < surplus + livreCartao:
-            compravel = f'{k} por {pcDict[k]}'
-            comprar = pcDict[k]
+        if cont > 0:
+            virgula = ', '
+        if cont == 0 or cont == 3:
+            virgula = ''
+        if pcDict[k] < surplus or pcDict[k] < livreCartao:
+            compravel.append(f'{virgula}{k} por {pcDict[k]}')
+            comprar += pcDict[k]
             del pcDict[k]
-            break
         else:
             compravel = "nada"
             comprar = 0
+        cont += 1
+
+    for i in compravel:
+        if i == 'Tudo já foi comprado' or compravel == 'Tudo já foi comprado':
+            comprando = 'Tudo já foi comprado'
+        else:
+            comprando += i
+            
+    if surplus > 0 and comprar > 0:
+        backCompra = comprar
+        comprar -= surplus
+        surplus = comprar - backCompra
+        if surplus < 0:
+            surplus = 0
+        if comprar < 0:
+            comprar = 0
+        livreCartao -= comprar
+    else:
+        livreCartao -=  comprar
+
     if surplus < 0 and surplus > -300:
         resto = f'Cheque especial usado = {abs(surplus)}\nResto = 0'
     elif surplus < -300:
         resto = f'Cheque especial usado = 300\nFaltando = {round_up(abs(surplus)-300)}'
     else:
         resto = f'Resto = {surplus}'
-    livreCartao -=  comprar
+        usoCheque = 0
 
-    #fazer uma lista com o nome dos meses e usar um contador de loop para mudar o print baseado na iteração
-    
     if not list(pcDict):
         printar = f'''
-{meses[contMes]} = {faturaAtual} + {duasContasEx} + {usoCheque} + {taxaBanco} - {salarioBruto}
-Total {meses[contMes].lower()} = {round_up(salarioBruto - (faturaAtual + duasContas + taxaBanco + usoCheque))}
+{meses[contMes]} = {salarioBruto} + {entradas} - {faturaAtual} - {duasContasEx} - {usoChequePassado} - {taxaBanco} 
+Total {meses[contMes].lower()} = {round_up(salarioBruto + entradas - (faturaAtual + duasContas + taxaBanco + usoChequePassado))}
 {resto}
-Peças compráveis = {compravel}
+Peças compráveis = {comprando}
 Livre no cartão = {round_up(livreCartao)}
 '''
     else:
         printar = f'''
-{meses[contMes]} = {faturaAtual} + {duasContasEx} + {usoCheque} + {taxaBanco} - {salarioBruto}
-Total {meses[contMes].lower()} = {round_up(salarioBruto - (faturaAtual + duasContas + taxaBanco + usoCheque))}
+{meses[contMes]} = {salarioBruto} + {entradas} - {faturaAtual} - {duasContasEx} - {usoChequePassado} - {taxaBanco}
+Total {meses[contMes].lower()} = {round_up(salarioBruto + entradas - (faturaAtual + duasContas + taxaBanco + usoChequePassado))}
 {resto}
-Peças compráveis = {compravel}
+Peças compráveis = {comprando}
 Livre no cartão = {round_up(livreCartao)}
 Peças faltando = {list(pcDict.items())}
     '''
     print(printar)
     salarioBruto = 811.4
     faturaAtual = round_up(proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, comprar))
-
-
-    if surplus < 0:
-        usoCheque = abs(surplus)
-        surplus = 0
-
-    '''
-    if usoCheque > 0 and faturaAtual + duasContas + taxaBanco + usoCheque > salarioBruto:
-        usoCheque = pagaChequeComCheque(usoCheque, chequeEspecial)
-    elif usoCheque > 0 and surplus >= usoCheque:
-        tempCheque = usoCheque
-        usoCheque -= surplus
-        surplus -= tempCheque
-        if usoCheque <= 0:
-            usoCheque = 0
-    '''
+    
+    compravel = ''
 
     aParcela = 58.06
     aFaltam -= 1
@@ -234,11 +259,6 @@ Peças faltando = {list(pcDict.items())}
     bFaltam -= 1
     cParcela = 22.15
     cFaltam -= 1
-    if surplus < 0 and surplus >= -300:
-        usoCheque = surplus
-    elif surplus > 0:
-        usoCheque = 0
-        salarioBruto += surplus
     
     val = input('Dinheiro extra recebido: ')
     try:
