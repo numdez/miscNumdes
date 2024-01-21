@@ -187,7 +187,7 @@ while(val != 'n'):
 
     if not list(pcDict):
         comprar = 0
-        compravel = 'Tudo já foi comprado'
+        compravel.append('Tudo já foi comprado')
 
     cont = 0
     for k in list(pcDict):
@@ -195,20 +195,26 @@ while(val != 'n'):
             virgula = ', '
         if cont == 0 or cont == 3:
             virgula = ''
-        if pcDict[k] < surplus or pcDict[k] < livreCartao:
+        if pcDict[k] < surplus + livreCartao:
             compravel.append(f'{virgula}{k} por {pcDict[k]}')
             comprar += pcDict[k]
+            print(compravel)
             del pcDict[k]
+            print(pcDict)
         else:
-            compravel = "nada"
+            compravel.append("nada")
             comprar = 0
         cont += 1
 
-    for i in compravel:
-        if i == 'Tudo já foi comprado' or compravel == 'Tudo já foi comprado':
+    for i in range(len(compravel)):
+        if compravel[i] == 'Tudo já foi comprado' or compravel == 'Tudo já foi comprado':
             comprando = 'Tudo já foi comprado'
+        elif compravel[i] == 'nada' and i == 0:
+            comprando = 'nada'
+        elif compravel[i] == 'nada' and i != 0:
+            break
         else:
-            comprando += i
+            comprando +=  compravel[i]
             
     if surplus > 0 and comprar > 0:
         backCompra = comprar
@@ -251,7 +257,8 @@ Peças faltando = {list(pcDict.items())}
     salarioBruto = 811.4
     faturaAtual = round_up(proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, comprar))
     
-    compravel = ''
+    compravel = []
+    comprando = ''
 
     aParcela = 58.06
     aFaltam -= 1
