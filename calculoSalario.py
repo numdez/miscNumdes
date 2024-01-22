@@ -133,15 +133,18 @@ pcDict = {
 }
 
 usoChequePassado = 0
+
 val = input('Dinheiro extra recebido: ')
 try:
     taxaCancelada = int(val)
 except:
+    taxaCancelada = 0
     pass
 
+surplus = 0
 maxCartao = 1100
-livreCartao = 31
-faturaAtual = 427.91 + 30.99
+livreCartao = 0
+faturaAtual = 458.91
 usoCheque = 178.58
 aParcela = 58.06
 aFaltam = 1
@@ -163,15 +166,20 @@ comprando = ''
 
 # refazer calculo
 
-entrada = val
+entrada = taxaCancelada
+
 pagar = round_up(faturaAtual + duasContas + usoCheque + taxaBanco)
 surplus = round_up(salarioBruto + entrada - pagar)
+print(surplus)
+print(livreCartao)
 livreCartao += faturaAtual
 
+print(faturaAtual)
 
 faturaAtual = round_up(proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, comprar))
-
-
+print(surplus)
+print(livreCartao)
+print(faturaAtual)
 
 compravel = []
 comprando = ''
@@ -188,11 +196,11 @@ cFaltam -= 1
 
 
 
-while(val != 'n'):
+'''while(val != 'n'):
 
     
 
-    entradas = surplus   
+    entradas = taxaCancelada + surplus  
     contMes += 1
     if contMes == 12:
         contMes = 0
@@ -273,22 +281,22 @@ while(val != 'n'):
         resto = f'Não sobrou nada'
     
     if not list(pcDict):
-        printar = f'''
+        printar = f''''''
 {meses[contMes]} = {salarioBruto} + {entradas} - {faturaAtual} - {duasContasEx} - {usoCheque} - {taxaBanco} 
 Total {meses[contMes].lower()} = {round_up(salarioBruto + entradas - (faturaAtual + duasContas + taxaBanco + usoCheque))}
 {resto}
 Peças compráveis = {comprando}
 Livre no cartão = {round_up(livreCartao)}
-'''
+''''''
     else:
-        printar = f'''
+        printar = f''''''
 {meses[contMes]} = {salarioBruto} + {entradas} - {faturaAtual} - {duasContasEx} - {usoCheque} - {taxaBanco}
 Total {meses[contMes].lower()} = {round_up(salarioBruto + entradas - (faturaAtual + duasContas + taxaBanco + usoCheque))}
 {resto}
 Peças compráveis = {comprando}
 Livre no cartão = {round_up(livreCartao)}
 Peças faltando = {list(pcDict.items())}
-    '''
+    ''''''
     print(printar)
     salarioBruto = 811.4
     faturaAtual = round_up(proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, comprar))
@@ -307,6 +315,7 @@ Peças faltando = {list(pcDict.items())}
     try:
         taxaCancelada = int(val)
     except:
+        taxaCancelada = 0
         pass
-
+'''
 # %%
