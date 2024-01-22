@@ -132,7 +132,7 @@ pcDict = {
     "Placa mãe": motherboard
 }
 
-usoChequeProx = 0
+usoChequePassado = 0
 val = input('Dinheiro extra recebido: ')
 try:
     taxaCancelada = int(val)
@@ -141,7 +141,7 @@ except:
 
 maxCartao = 1100
 livreCartao = 31
-faturaAtual = 427.91
+faturaAtual = 427.91 + 30.99
 usoCheque = 178.58
 aParcela = 58.06
 aFaltam = 1
@@ -150,15 +150,48 @@ bFaltam = 2
 cParcela = 22.15
 cFaltam = 9
 
+duasContas = contaCondo + contaSky
+duasContasEx = f"({contaCondo} + {contaSky})"
+zeroContas = contaCondo2 + contaSky2
+zeroContasEx = f"{contaCondo2} + {contaSky2}"
 
 contMes = 0
 compravel = []
 comprar = 0
 comprando = ''
 
+
+# refazer calculo
+
+entrada = val
+pagar = round_up(faturaAtual + duasContas + usoCheque + taxaBanco)
+surplus = round_up(salarioBruto + entrada - pagar)
+livreCartao += faturaAtual
+
+
+faturaAtual = round_up(proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, comprar))
+
+
+
+compravel = []
+comprando = ''
+
+aParcela = 58.06
+aFaltam -= 1
+bParcela = 191.90
+bFaltam -= 1
+cParcela = 22.15
+cFaltam -= 1
+
+
+
+
+
+
 while(val != 'n'):
 
     
+
     entradas = surplus   
     contMes += 1
     if contMes == 12:
@@ -171,18 +204,12 @@ while(val != 'n'):
     elif taxaCancelada > 0:
         entradas += taxaCancelada
         taxaCancelada = 0
-    if usoCheque < 0:
-        usoCheque = abs(usoCheque)
-    
-    usoChequePassado = usoCheque
 
-    duasContas = contaCondo + contaSky
-    duasContasEx = f"{contaCondo} + {contaSky}"
-    zeroContas = contaCondo2 + contaSky2
-    zeroContasEx = f"{contaCondo2} + {contaSky2}"
-    
 
-    surplus = round_up(salarioBruto + entradas - (faturaAtual + duasContas + usoChequePassado + taxaBanco))
+    pagar = round_up(faturaAtual + duasContas + usoCheque + taxaBanco)
+
+    surplus = round_up(salarioBruto + entradas - pagar)
+
     livreCartao += faturaAtual
 
     if not list(pcDict):
@@ -206,6 +233,7 @@ while(val != 'n'):
             comprar = 0
         cont += 1
 
+
     for i in range(len(compravel)):
         if compravel[i] == 'Tudo já foi comprado' or compravel == 'Tudo já foi comprado':
             comprando = 'Tudo já foi comprado'
@@ -216,7 +244,8 @@ while(val != 'n'):
         else:
             comprando +=  compravel[i]
             
-    if surplus > 0 and comprar > 0:
+
+    if surplus > comprar and comprar > 0:
         backCompra = comprar
         comprar -= surplus
         surplus = comprar - backCompra
@@ -224,30 +253,37 @@ while(val != 'n'):
             surplus = 0
         if comprar < 0:
             comprar = 0
-        livreCartao -= comprar
-    else:
+    elif surplus < 0 and comprar > 0 and livreCartao > comprar:
         livreCartao -=  comprar
+
+    print(surplus)
 
     if surplus < 0 and surplus > -300:
         resto = f'Cheque especial usado = {abs(surplus)}\nResto = 0'
+        usoCheque = abs(surplus)
+        surplus = 0
     elif surplus < -300:
         resto = f'Cheque especial usado = 300\nFaltando = {round_up(abs(surplus)-300)}'
-    else:
+        usoCheque = 300
+        surplus += 300
+    elif surplus > 0:
         resto = f'Resto = {surplus}'
         usoCheque = 0
-
+    elif surplus == 0:
+        resto = f'Não sobrou nada'
+    
     if not list(pcDict):
         printar = f'''
-{meses[contMes]} = {salarioBruto} + {entradas} - {faturaAtual} - {duasContasEx} - {usoChequePassado} - {taxaBanco} 
-Total {meses[contMes].lower()} = {round_up(salarioBruto + entradas - (faturaAtual + duasContas + taxaBanco + usoChequePassado))}
+{meses[contMes]} = {salarioBruto} + {entradas} - {faturaAtual} - {duasContasEx} - {usoCheque} - {taxaBanco} 
+Total {meses[contMes].lower()} = {round_up(salarioBruto + entradas - (faturaAtual + duasContas + taxaBanco + usoCheque))}
 {resto}
 Peças compráveis = {comprando}
 Livre no cartão = {round_up(livreCartao)}
 '''
     else:
         printar = f'''
-{meses[contMes]} = {salarioBruto} + {entradas} - {faturaAtual} - {duasContasEx} - {usoChequePassado} - {taxaBanco}
-Total {meses[contMes].lower()} = {round_up(salarioBruto + entradas - (faturaAtual + duasContas + taxaBanco + usoChequePassado))}
+{meses[contMes]} = {salarioBruto} + {entradas} - {faturaAtual} - {duasContasEx} - {usoCheque} - {taxaBanco}
+Total {meses[contMes].lower()} = {round_up(salarioBruto + entradas - (faturaAtual + duasContas + taxaBanco + usoCheque))}
 {resto}
 Peças compráveis = {comprando}
 Livre no cartão = {round_up(livreCartao)}
@@ -266,7 +302,7 @@ Peças faltando = {list(pcDict.items())}
     bFaltam -= 1
     cParcela = 22.15
     cFaltam -= 1
-    
+
     val = input('Dinheiro extra recebido: ')
     try:
         taxaCancelada = int(val)
