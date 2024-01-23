@@ -93,7 +93,10 @@ pcCartao = {
 
 avulso = 0
 entrada = 's'
+contLacos = 0
 cont = 1
+
+
 
 entrada = input(f"Quanto entrou em {meses[cont]}? ")
 try:
@@ -102,6 +105,14 @@ except:
     pass
 
 while(entrada != 'n'):
+    # CONSERTAR O CALCULO DE SALDO DISPONIVEL NO CARTÃO, DEVE SER ADICIONADO À FATURA ATUAL E RETIRADO DO LIVRECARTAO
+    compravel = []
+    comprar = 0
+    virgula = ''
+    contLacos = 0
+    comprando = ''
+    cartaoOuPix = []
+
     pagar = round_up(faturaAtual + usoCheque + duasContas)
     pagarEx = f'{faturaAtual} + {usoCheque} + {duasContasEx}'
     usoCheque = 0
@@ -117,11 +128,47 @@ while(entrada != 'n'):
         usoCheque = 300
     else:
         avulso = resto
+
+    for i in list(pcDict):
+        if contLacos > 0 and contLacos < len(list(pcDict)) and compravel:
+            virgula = ', '
+        if pcDict[i] <= avulso:
+            compravel.append(f'{virgula}{i} por {pcDict[i]}')
+            avulso -= pcDict[i]
+            cartaoOuPix.append('no pix')
+            del pcDict[i]
+            del pcCartao[i]
+        contLacos += 1
+
+    for i in list(pcCartao):
+        if contLacos > 0 and contLacos < len(list(pcCartao)) and compravel:
+            virgula = ', '
+        if pcCartao[i] <= livreCartao:
+            compravel.append(f'{virgula}{i} por {pcCartao[i]}')
+            livreCartao -= pcCartao[i]
+            cartaoOuPix.append('no cartão')
+            del pcCartao[i]
+            del pcDict[i]    
+        contLacos += 1
+
+    if not pcDict or not pcCartao:
+        compravel = 'Tudo foi comprado'
+        comprar = 0
+
+    if compravel and compravel != 'Tudo foi comprado':
+        print(compravel, cartaoOuPix)
+        for i in range(len(compravel)):
+            comprando += f'{compravel[i]} {cartaoOuPix[i]}'
+
+    livreCartao = round_up(livreCartao)
     printar = f'''Tanto que deve pagar: {pagar}
 Tanto que tem para pagar: {montante}
 Tanto que sobrou: {resto}
 Tanto que usou do cheque especial: {usoCheque}
 Tanto que tem livre no cartão: {livreCartao}
+Pode comprar: {comprando}
+Falta comprar: {list(pcDict)}
+
 '''
     print(printar)
     aParcela = 58.06
@@ -130,7 +177,7 @@ Tanto que tem livre no cartão: {livreCartao}
     bFaltam -= 1
     cParcela = 22.15
     cFaltam -= 1
-    faturaAtual = round_up(proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, 0))
+    faturaAtual = round_up(proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, comprar))
     cont += 1
     if cont == 12:
         cont = 0
@@ -139,4 +186,5 @@ Tanto que tem livre no cartão: {livreCartao}
         avulso += float(entrada)
     except:
         pass
+    
     
