@@ -129,6 +129,10 @@ while(entrada != 'n'):
     else:
         avulso = resto
 
+    if not pcDict or not pcCartao:
+        compravel = 'Tudo foi comprado'
+        comprar = 0
+
     for i in list(pcDict):
         if contLacos > 0 and contLacos < len(list(pcDict)) and compravel:
             virgula = ', '
@@ -146,17 +150,14 @@ while(entrada != 'n'):
         if pcCartao[i] <= livreCartao:
             compravel.append(f'{virgula}{i} por {pcCartao[i]}')
             livreCartao -= pcCartao[i]
+            faturaAtual += pcCartao[i]
             cartaoOuPix.append('no cartão')
             del pcCartao[i]
             del pcDict[i]    
         contLacos += 1
-
-    if not pcDict or not pcCartao:
-        compravel = 'Tudo foi comprado'
-        comprar = 0
+    
 
     if compravel and compravel != 'Tudo foi comprado':
-        print(compravel, cartaoOuPix)
         for i in range(len(compravel)):
             comprando += f'{compravel[i]} {cartaoOuPix[i]}'
 
