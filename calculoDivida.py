@@ -33,6 +33,7 @@ meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'A
 
 salarioBruto = 811.4
 chequeEspecial = 300
+livreCheque = 0
 
 taxaCancelada = 0
 taxaBanco = 50
@@ -105,7 +106,6 @@ except:
     pass
 
 while(entrada != 'n'):
-    # CONSERTAR O CALCULO DE SALDO DISPONIVEL NO CARTÃO, DEVE SER ADICIONADO À FATURA ATUAL E RETIRADO DO LIVRECARTAO
     compravel = []
     comprar = 0
     virgula = ''
@@ -116,25 +116,34 @@ while(entrada != 'n'):
     pagar = round_up(faturaAtual + usoCheque + duasContas)
     pagarEx = f'{faturaAtual} + {usoCheque} + {duasContasEx}'
     usoCheque = 0
+    livreCheque = 0
     montante = salarioBruto + avulso
     avulso = 0
     resto = round_up(montante - pagar)
     livreCartao += faturaAtual
+
     if resto < 0 and resto >= -300:
         usoCheque = round_up(abs(resto))
+        livreCheque = chequeEspecial - usoCheque
         resto = 0
     elif resto < -300:
         resto += 300
         usoCheque = 300
+        livreCheque = 0
     else:
+        livreCheque = chequeEspecial - usoCheque
         avulso = resto
 
     for i in list(pcDict):
         if contLacos > 0 and contLacos < len(list(pcDict)) and compravel:
             virgula = ', '
-        if pcDict[i] <= avulso:
+        if pcDict[i] <= avulso + livreCheque:
             compravel.append(f'{virgula}{i} por {pcDict[i]}')
             avulso -= pcDict[i]
+            if avulso < 0:
+                usoCheque = abs(avulso)
+                avulso = 0
+                livreCheque -= usoCheque
             cartaoOuPix.append('no pix')
             del pcDict[i]
             del pcCartao[i]
@@ -162,6 +171,7 @@ while(entrada != 'n'):
 Tanto que tem para pagar: {montante}
 Tanto que sobrou: {resto}
 Tanto que usou do cheque especial: {usoCheque}
+Tanto que tem livre no cheque especial: {livreCheque}
 Tanto que tem livre no cartão: {livreCartao}
 Pode comprar: {comprando}
 Falta comprar: {list(pcDict)}
