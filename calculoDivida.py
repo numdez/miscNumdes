@@ -16,7 +16,7 @@ def round_up(x, place=2):
     context.rounding = original_rounding
     return float(rounded)
 
-def proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, extra):
+def proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, extra, extra2, extra3, extra4, acadMes):
     nextFatura = 0
     if aFaltam > 0:
         nextFatura += aParcela
@@ -26,7 +26,21 @@ def proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, extra
         nextFatura += cParcela
     if extra > 0:
         nextFatura += extra
+    if extra2 > 0:
+        nextFatura += extra2
+    if extra3 > 0:
+        nextFatura += extra3
+    if extra4 > 0:
+        nextFatura += extra4
+    nextFatura += acadMes
     return nextFatura
+
+def parcelaCompra(valor, parcelas):
+    parcelado = []
+    for i in range(parcelas):
+        parcelado.append(valor/parcelas)
+    return parcelado
+
 
 
 meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
@@ -75,6 +89,8 @@ bFaltam = 3
 cParcela = 22.15
 cFaltam = 10
 
+acadMes = 110
+
 duasContas = contaCondo + contaSky
 duasContasEx = f"({contaCondo} + {contaSky})"
 zeroContas = contaCondo2 + contaSky2
@@ -96,6 +112,10 @@ avulso = 0
 entrada = 's'
 contLacos = 0
 cont = 1
+comprarParcela1 = []
+comprarParcela2 = []
+comprarParcela3 = []
+comprarParcela4 = []
 
 
 
@@ -121,7 +141,7 @@ while(entrada != 'n'):
     avulso = 0
     resto = round_up(montante - pagar)
     livreCartao += faturaAtual
-
+    
     if resto < 0 and resto >= -300:
         usoCheque = round_up(abs(resto))
         livreCheque = chequeEspecial - usoCheque
@@ -160,6 +180,16 @@ while(entrada != 'n'):
             del pcCartao[i]
             del pcDict[i]    
         contLacos += 1
+        for i in parcelaCompra(comprar, 5):
+            if not comprarParcela1:
+                comprarParcela1.append(i)
+            if not comprarParcela2:
+                comprarParcela2.append(i)
+            if not comprarParcela3:
+                comprarParcela3.append(i)
+            if not comprarParcela4:
+                comprarParcela4.append(i)
+
     
 
     if compravel and compravel != 'Tudo foi comprado':
@@ -184,7 +214,26 @@ Falta comprar: {list(pcDict)}
     bFaltam -= 1
     cParcela = 22.15
     cFaltam -= 1
-    faturaAtual = round_up(proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, comprar))
+
+    if not comprarParcela1:
+        comprarParcela1.append(0)
+    if not comprarParcela2:
+        comprarParcela2.append(0)
+    if not comprarParcela3:
+        comprarParcela3.append(0)
+    if not comprarParcela4:
+        comprarParcela4.append(0)
+
+    faturaAtual = round_up(proximaFatura(aParcela, aFaltam, bParcela, bFaltam, cParcela, cFaltam, comprarParcela1[0], comprarParcela2[0], comprarParcela3[0], comprarParcela4[0], acadMes))
+    if comprarParcela1:
+        comprarParcela1.pop(0)
+    if comprarParcela2:
+        comprarParcela2.pop(0)
+    if comprarParcela3:
+        comprarParcela3.pop(0)
+    if comprarParcela4:
+        comprarParcela4.pop(0)
+    
     cont += 1
     if cont == 12:
         cont = 0
