@@ -81,15 +81,14 @@ surplus = 0
 maxCartao = 1100
 livreCartao = 0
 faturaAtual = 458.90
-usoCheque = 178.58
+usoCheque = 178.58 + 30
 aParcela = 58.06
 aFaltam = 2
 bParcela = 191.90
 bFaltam = 3
 cParcela = 22.15
 cFaltam = 10
-
-acadMes = 110
+acadMes = 0
 
 duasContas = contaCondo + contaSky
 duasContasEx = f"({contaCondo} + {contaSky})"
@@ -97,12 +96,12 @@ zeroContas = contaCondo2 + contaSky2
 zeroContasEx = f"{contaCondo2} + {contaSky2}"
 
 pcDict = {
-    "Pente de 16GB": totalRam16,
+    "Pente de 8GB": totalRam8,
     "fonte 650W": fonte650w,
     "Placa mãe": motherboard
 }
 pcCartao = {
-    "Pente de 16GB": totalRam16,
+    "Pente de 8GB": totalRam8,
     "fonte 650W": f650wCartao,
     "Placa mãe": moboCartao
 }
@@ -197,7 +196,7 @@ while(entrada != 'n'):
             comprando += f'{compravel[i]} {cartaoOuPix[i]}'
 
     livreCartao = round_up(livreCartao)
-    printar = f'''Tanto que deve pagar: {pagar}
+    printar = f'''Tanto que deve pagar: {pagar} ({faturaAtual} + Cheque Especial Usado + {duasContas})
 Tanto que tem para pagar: {montante}
 Tanto que sobrou: {resto}
 Tanto que usou do cheque especial: {usoCheque}
