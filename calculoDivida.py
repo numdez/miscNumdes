@@ -41,82 +41,71 @@ def parcelaCompra(valor, parcelas):
         parcelado.append(valor/parcelas)
     return parcelado
 
-
-
 meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
 
 salarioBruto = 811.4
 chequeEspecial = 300
 livreCheque = 0
 
-taxaCancelada = 0
-taxaBanco = 50
 contaSky = 130
 contaCondo = 300
-contaSky2 = 0
-contaCondo2 = 0
 
-motherboard = 350 + 24
-moboCartao = 411 + 24
+motherboard = 338.24
+moboCartao = 338.24
 gabinete = 210
 cpu = 576
-fonte600w = 280 + 31
-f600wCartao = 329.5 + 31
-fonte650w = 288 + 34
-f650wCartao = 339 + 34
+fonte600w = 0
+'''fonte650w = 288 + 34
+f650wCartao = 339 + 34'''
+fonteAli = 237.92
 ram8 = 99.52
 impostoRam8 = 20.38
 totalRam8 = round_up(ram8 + impostoRam8)
-ram16 = 143.13
-impostoRam16 = 29.33
+ram16 = 0
+impostoRam16 = 0
 totalRam16 = round_up(ram16 + impostoRam16)
+ram32 = 249.60
+impostoRam32 = 51.14
+totalRam32 = round_up(ram32 + impostoRam32)
 ram = round_up(ram8 + impostoRam8 + ram16 + impostoRam16)
 gpu = 952.45
 
-componentes = [motherboard, gabinete, cpu, fonte650w, totalRam8, totalRam16, gpu]
-comprados = [gpu, cpu, gabinete]
+componentes = [motherboard, gabinete, cpu, fonte600w, totalRam16, gpu]
+comprados = [gpu, cpu, gabinete, motherboard, totalRam16, fonte600w]
 faltaComprar = [componente for componente in componentes if componente not in comprados]
 
 surplus = 0
 maxCartao = 1100
-livreCartao = 0
-faturaAtual = 458.90
-usoCheque = 178.58 + 30
-aParcela = 58.06
-aFaltam = 2
+livreCartao = 562
+faturaAtual = 349.39
+usoCheque = 201.35
+aParcela = 16.51
+aFaltam = 3
 bParcela = 191.90
-bFaltam = 3
-cParcela = 22.15
-cFaltam = 10
+bFaltam = 1
+cParcela = 22.14
+cFaltam = 8
 acadMes = 0
 
 duasContas = contaCondo + contaSky
 duasContasEx = f"({contaCondo} + {contaSky})"
-zeroContas = contaCondo2 + contaSky2
-zeroContasEx = f"{contaCondo2} + {contaSky2}"
 
 pcDict = {
-    "Pente de 8GB": totalRam8,
-    "fonte 650W": fonte650w,
-    "Placa mãe": motherboard
+
 }
 pcCartao = {
-    "Pente de 8GB": totalRam8,
-    "fonte 650W": f650wCartao,
-    "Placa mãe": moboCartao
-}
 
+}
 
 avulso = 0
 entrada = 's'
 contLacos = 0
-cont = 1
+mesAtual = True
+cont = 3
 comprarParcela1 = []
 comprarParcela2 = []
 comprarParcela3 = []
 comprarParcela4 = []
-
-
 
 entrada = input(f"Quanto entrou em {meses[cont]}? ")
 try:
@@ -138,9 +127,10 @@ while(entrada != 'n'):
     livreCheque = 0
     montante = salarioBruto + avulso
     avulso = 0
+
     resto = round_up(montante - pagar)
     livreCartao += faturaAtual
-    
+
     if resto < 0 and resto >= -300:
         usoCheque = round_up(abs(resto))
         livreCheque = chequeEspecial - usoCheque
@@ -178,18 +168,7 @@ while(entrada != 'n'):
             cartaoOuPix.append('no cartão')
             del pcCartao[i]
             del pcDict[i]    
-        contLacos += 1
-        for i in parcelaCompra(comprar, 5):
-            if not comprarParcela1:
-                comprarParcela1.append(i)
-            if not comprarParcela2:
-                comprarParcela2.append(i)
-            if not comprarParcela3:
-                comprarParcela3.append(i)
-            if not comprarParcela4:
-                comprarParcela4.append(i)
-
-    
+        contLacos += 1    
 
     if compravel and compravel != 'Tudo foi comprado':
         for i in range(len(compravel)):
@@ -202,17 +181,18 @@ Tanto que sobrou: {resto}
 Tanto que usou do cheque especial: {usoCheque}
 Tanto que tem livre no cheque especial: {livreCheque}
 Tanto que tem livre no cartão: {livreCartao}
-Pode comprar: {comprando}
-Falta comprar: {list(pcDict)}
-
 '''
+    """
+    Pode comprar: {comprando}
+    Falta comprar: {list(pcDict)}
+    """
     print(printar)
-    aParcela = 58.06
-    aFaltam -= 1
-    bParcela = 191.90
-    bFaltam -= 1
-    cParcela = 22.15
-    cFaltam -= 1
+    if aFaltam > 0:
+        aFaltam -= 1
+    if bFaltam > 0:
+        bFaltam -= 1
+    if cFaltam > 0:
+        cFaltam -= 1
 
     if not comprarParcela1:
         comprarParcela1.append(0)
@@ -241,5 +221,3 @@ Falta comprar: {list(pcDict)}
         avulso += float(entrada)
     except:
         pass
-    
-    
