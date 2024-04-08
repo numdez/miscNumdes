@@ -43,7 +43,9 @@ def parcelaCompra(valor, parcelas):
 
 meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
 
-salarioBruto = 811.4
+
+salarioBrutoAtual = 811.4
+salarioLiquidoFe = 2160
 chequeEspecial = 300
 livreCheque = 0
 
@@ -55,8 +57,10 @@ moboCartao = 338.24
 gabinete = 210
 cpu = 576
 fonte600w = 0
-'''fonte650w = 288 + 34
-f650wCartao = 339 + 34'''
+'''
+fonte650w = 288 + 34
+f650wCartao = 339 + 34
+'''
 fonteAli = 237.92
 ram8 = 99.52
 impostoRam8 = 20.38
@@ -78,7 +82,7 @@ surplus = 0
 maxCartao = 1100
 livreCartao = 562
 faturaAtual = 349.39
-usoCheque = 237.28
+usoCheque = 33.08 + 10
 aParcela = 16.51
 aFaltam = 3
 bParcela = 191.90
@@ -102,6 +106,7 @@ entrada = 's'
 contLacos = 0
 mesAtual = True
 cont = 3
+contExtra = 0
 comprarParcela1 = []
 comprarParcela2 = []
 comprarParcela3 = []
@@ -114,6 +119,7 @@ except:
     pass
 
 while(entrada != 'n'):
+    contExtra += 1
     compravel = []
     comprar = 0
     virgula = ''
@@ -125,7 +131,8 @@ while(entrada != 'n'):
     pagarEx = f'{faturaAtual} + {usoCheque} + {duasContasEx}'
     usoCheque = 0
     livreCheque = 0
-    montante = salarioBruto + avulso
+    montante = salarioBrutoAtual + avulso
+    #montante = salarioLiquidoFe + avulso
     avulso = 0
 
     resto = round_up(montante - pagar)
@@ -181,6 +188,7 @@ Tanto que sobrou: {resto}
 Tanto que usou do cheque especial: {usoCheque}
 Tanto que tem livre no cheque especial: {livreCheque}
 Tanto que tem livre no cartão: {livreCartao}
+Mês: {contExtra}
 '''
     """
     Pode comprar: {comprando}
@@ -216,8 +224,11 @@ Tanto que tem livre no cartão: {livreCartao}
     cont += 1
     if cont == 12:
         cont = 0
+    
     entrada = input(f"Quanto entrou em {meses[cont]}? ")
     try:
         avulso += float(entrada)
     except:
         pass
+    
+    
