@@ -45,7 +45,6 @@ meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'A
 
 
 salarioBrutoAtual = 811.4
-salarioLiquidoFe = 2160
 chequeEspecial = 300
 livreCheque = 0
 
@@ -80,16 +79,19 @@ faltaComprar = [componente for componente in componentes if componente not in co
 
 surplus = 0
 maxCartao = 1100
-livreCartao = 562
-faturaAtual = 349.39
-usoCheque = 33.08 + 10
+livreCartao = 911
+faturaAtual = 38.65
+saldoAtual = 672.25
+usoCheque = 0
 aParcela = 16.51
-aFaltam = 3
+aFaltam = 2
 bParcela = 191.90
-bFaltam = 1
+bFaltam = 0
 cParcela = 22.14
-cFaltam = 8
+cFaltam = 7
 acadMes = 0
+
+meta = 0
 
 duasContas = contaCondo + contaSky
 duasContasEx = f"({contaCondo} + {contaSky})"
@@ -105,12 +107,18 @@ avulso = 0
 entrada = 's'
 contLacos = 0
 mesAtual = True
-cont = 3
+cont = 4
 contExtra = 0
 comprarParcela1 = []
 comprarParcela2 = []
 comprarParcela3 = []
 comprarParcela4 = []
+
+entrada = input(f'Meta a ser alcançada: ')
+try:
+    meta = float(entrada)
+except:
+    pass
 
 entrada = input(f"Quanto entrou em {meses[cont]}? ")
 try:
@@ -132,11 +140,22 @@ while(entrada != 'n'):
     usoCheque = 0
     livreCheque = 0
     montante = salarioBrutoAtual + avulso
-    #montante = salarioLiquidoFe + avulso
     avulso = 0
+
+    if (mesAtual == True):
+        montante = saldoAtual
+        mesAtual = False
 
     resto = round_up(montante - pagar)
     livreCartao += faturaAtual
+
+    if resto > 0 and meta > 0:
+        if (meta - resto/4) < 0:
+            resto -= meta
+            meta = 0
+        else:
+            meta -= resto/4
+            resto -= resto/4
 
     if resto < 0 and resto >= -300:
         usoCheque = round_up(abs(resto))
@@ -188,6 +207,7 @@ Tanto que sobrou: {resto}
 Tanto que usou do cheque especial: {usoCheque}
 Tanto que tem livre no cheque especial: {livreCheque}
 Tanto que tem livre no cartão: {livreCartao}
+Tanto que falta para alcançar a meta: {meta}
 Mês: {contExtra}
 '''
     """
@@ -230,5 +250,3 @@ Mês: {contExtra}
         avulso += float(entrada)
     except:
         pass
-    
-    
