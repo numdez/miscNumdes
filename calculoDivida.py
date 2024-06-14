@@ -44,12 +44,14 @@ def parcelaCompra(valor, parcelas):
 meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
 
 
-salarioBrutoAtual = 811.4
+
+salarioLiquido = 2183.71
 chequeEspecial = 300
 livreCheque = 0
 
 contaSky = 130
 contaCondo = 300
+contaEnergia = 800
 
 motherboard = 338.24
 moboCartao = 338.24
@@ -79,22 +81,23 @@ faltaComprar = [componente for componente in componentes if componente not in co
 
 surplus = 0
 maxCartao = 1100
-livreCartao = 911
+livreCartao = -127.22
 faturaAtual = 38.65
-saldoAtual = 672.25
-usoCheque = 0
+saldoAtual = 0
+usoCheque = 295.71
 aParcela = 16.51
-aFaltam = 2
+aFaltam = 0
 bParcela = 191.90
 bFaltam = 0
 cParcela = 22.14
-cFaltam = 7
+cFaltam = 5
 acadMes = 0
 
 meta = 0
+guardMeta = 0
 
-duasContas = contaCondo + contaSky
-duasContasEx = f"({contaCondo} + {contaSky})"
+todasContas = contaCondo + contaSky + contaEnergia
+todasContasEx = f"({contaCondo} + {contaSky} + {contaEnergia})"
 
 pcDict = {
 
@@ -106,8 +109,8 @@ pcCartao = {
 avulso = 0
 entrada = 's'
 contLacos = 0
-mesAtual = True
-cont = 4
+mesAtual = False
+cont = 5
 contExtra = 0
 comprarParcela1 = []
 comprarParcela2 = []
@@ -134,28 +137,32 @@ while(entrada != 'n'):
     contLacos = 0
     comprando = ''
     cartaoOuPix = []
-
-    pagar = round_up(faturaAtual + usoCheque + duasContas)
-    pagarEx = f'{faturaAtual} + {usoCheque} + {duasContasEx}'
-    usoCheque = 0
-    livreCheque = 0
-    montante = salarioBrutoAtual + avulso
-    avulso = 0
-
+    
     if (mesAtual == True):
-        montante = saldoAtual
+        montante = saldoAtual + avulso
+        pagar = usoCheque
         mesAtual = False
-
+    else:
+        pagar = round_up(faturaAtual + usoCheque + todasContas)
+        pagarEx = f'{faturaAtual} + {usoCheque} + {todasContasEx}'
+        usoCheque = 0
+        livreCheque = 0
+        montante = salarioLiquido + avulso
+    
+    avulso = 0
     resto = round_up(montante - pagar)
+    #print(resto)
     livreCartao += faturaAtual
 
     if resto > 0 and meta > 0:
-        if (meta - resto/4) < 0:
-            resto -= meta
+        if (meta - resto/3*2) < 0:
+            guardMeta = round_up(meta)
+            resto = round_up(resto - guardMeta)
             meta = 0
         else:
-            meta -= resto/4
-            resto -= resto/4
+            guardMeta = round_up(resto/3*2)
+            meta = round_up(meta - guardMeta)
+            resto = round_up(resto - guardMeta)
 
     if resto < 0 and resto >= -300:
         usoCheque = round_up(abs(resto))
@@ -201,15 +208,27 @@ while(entrada != 'n'):
             comprando += f'{compravel[i]} {cartaoOuPix[i]}'
 
     livreCartao = round_up(livreCartao)
-    printar = f'''Tanto que deve pagar: {pagar} ({faturaAtual} + Cheque Especial Usado + {duasContas})
+    if guardMeta > 0:
+        printar = f'''Tanto que deve pagar: {pagar} ({faturaAtual} + Cheque Especial Usado + {todasContas})
 Tanto que tem para pagar: {montante}
 Tanto que sobrou: {resto}
 Tanto que usou do cheque especial: {usoCheque}
 Tanto que tem livre no cheque especial: {livreCheque}
 Tanto que tem livre no cartão: {livreCartao}
 Tanto que falta para alcançar a meta: {meta}
+Tanto que guardou para alcançar a meta: {guardMeta}
 Mês: {contExtra}
-'''
+    '''
+    else:
+        printar = f'''Tanto que deve pagar: {pagar} ({faturaAtual} + Cheque Especial Usado + {todasContas})
+Tanto que tem para pagar: {montante}
+Tanto que sobrou: {resto}
+Tanto que usou do cheque especial: {usoCheque}
+Tanto que tem livre no cheque especial: {livreCheque}
+Tanto que tem livre no cartão: {livreCartao}
+Mês: {contExtra}
+    '''
+    guardMeta = 0
     """
     Pode comprar: {comprando}
     Falta comprar: {list(pcDict)}
@@ -250,3 +269,5 @@ Mês: {contExtra}
         avulso += float(entrada)
     except:
         pass
+    
+    
